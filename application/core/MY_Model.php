@@ -142,13 +142,22 @@ class MY_Model extends CI_Model {
      * @return integer
      */
     public function save($data) {
+        $insert = FALSE;
         if (isset($data['id'])) {
-            $this->db->where('id', $data['id']);
-            $this->db->update($this->table, $data);
+            if ($data['id'] != 0) {
+                $this->db->where('id', $data['id']);
+                $this->db->update($this->table, $data);
+            }
+            else {
+                $insert = TRUE;
+            }
         }
         else {
-            $this->db->insert($this->table, $data);
+            $insert = TRUE;
+        }
 
+        if ($insert) {
+            $this->db->insert($this->table, $data);
             $data['id'] = $this->db->insert_id();
         }
 
