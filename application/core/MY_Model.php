@@ -86,6 +86,14 @@ class MY_Model extends CI_Model {
      *
      * Method to retrieve data from database
      *
+     * Examples:
+     *
+     * $where :
+     *      'id = 1'
+     *      or
+     *      array('id' => 1, 'other_id' => 2)
+     *
+     *
      * @param array $where      Can be an array or a string
      * @param array $fields     Can be an array or an string
      * @access public
@@ -95,8 +103,8 @@ class MY_Model extends CI_Model {
         $this->db->from($this->table);
 
         if (is_array($where)) {
-            foreach ($where as $w){
-                $this->db->where($w);
+            foreach ($where as $f => $w){
+                $this->db->where($f, $w);
             }
         }
         elseif (strlen($where) > 0) {
@@ -108,7 +116,7 @@ class MY_Model extends CI_Model {
                 $this->db->select($field);
             }
         }
-        elseif (strlen($where) > 0) {
+        elseif (strlen($fields) > 0) {
             $this->db->select($fields);
         }
 
@@ -178,8 +186,8 @@ class MY_Model extends CI_Model {
         $this->db->from($this->table);
 
         if (is_array($where)) {
-            foreach ($where as $w){
-                $this->db->where($w);
+            foreach ($where as $f => $w){
+                $this->db->where($f, $w);
             }
         }
         elseif (strlen($where) > 0) {
@@ -191,7 +199,7 @@ class MY_Model extends CI_Model {
                 $this->db->select($field);
             }
         }
-        elseif (strlen($where) > 0) {
+        elseif (strlen($fields) > 0) {
             $this->db->select($fields);
         }
 
