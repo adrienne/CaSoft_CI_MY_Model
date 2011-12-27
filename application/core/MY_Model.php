@@ -292,7 +292,7 @@ class MY_Model extends CI_Model {
      * @return integer
      */
     public function count() {
-        return $this->db->count_all_resutls($this->table);
+        return $this->db->count_all_results($this->table);
     }
 }
 
