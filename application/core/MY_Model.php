@@ -282,6 +282,18 @@ class MY_Model extends CI_Model {
 
         return $results;
     }
+
+    /**
+     * count
+     *
+     * Returns the number of results
+     *
+     * @access public
+     * @return integer
+     */
+    public function count() {
+        return $this->db->count_all_resutls($this->table);
+    }
 }
 
 /* End of file MY_Model.php */
