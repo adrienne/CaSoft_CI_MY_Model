@@ -125,29 +125,19 @@ class MY_Model extends CI_Model {
      *
      * @param array $data
      * @access public
-     * @return integer
+     * @return mixed
      */
     public function save($data) {
-        $insert = FALSE;
-        if (isset($data['id'])) {
-            if ($data['id'] != 0) {
-                $this->db->where('id', $data['id']);
-                $this->db->update($this->table, $data);
-            }
-            else {
-                $insert = TRUE;
-            }
+        if (isset($data['id']) AND $data['id'] != 0) {
+            $this->db->where('id', $data['id']);
+            $this->db->update($this->table, $data);
         }
         else {
-            $insert = TRUE;
-        }
-
-        if ($insert) {
             $this->db->insert($this->table, $data);
             $data['id'] = $this->db->insert_id();
         }
 
-        return $data['id'];
+        return ($this->db->affected_rows() > 0) ? $data['id'] : FALSE;
     }
 
     /**
@@ -280,6 +270,18 @@ class MY_Model extends CI_Model {
         }
 
         return $results;
+    }
+
+    /**
+     * count
+     *
+     * Returns the number of results
+     *
+     * @access public
+     * @return integer
+     */
+    public function count() {
+        return $this->db->count_all_results($this->table);
     }
 }
 
