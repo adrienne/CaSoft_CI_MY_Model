@@ -8,7 +8,8 @@ This Model has a collection of default methods to save and retrieve data from da
 Depends
 -------
 
-Tested with **CodeIgniter 2.0.3**.
+  - Works with **CodeIgniter 2.x**
+  - Last tested with **CodeIgniter 2.1.0**.
 
 License
 -------
