@@ -8,7 +8,7 @@
  *
  * @author Evaldo Junior <junior@casoft.info>
  * @subpackage  core
- * @version 0.1
+ * @version 1.0 beta
  *
  * Copyright 2011 CaSoft Tecnologia e Desenvolvimento. All rights reserved.
  *
@@ -85,6 +85,11 @@ class MY_Model extends CI_Model {
      * get
      *
      * Method to retrieve data from database
+     * This method tries to return just one record, but if it finds
+     * more records, it will return all of them in an array, just like
+     * the 'filter' method.
+     * Useful when you want just one row. For many rows 'filter' is
+     * the best option.
      *
      * Examples:
      *
@@ -100,34 +105,7 @@ class MY_Model extends CI_Model {
      * @return void
      */
     public function get($where = '', $fields = '') {
-        $this->db->from($this->table);
-
-        if (is_array($where)) {
-            foreach ($where as $f => $w){
-                $this->db->where($f, $w);
-            }
-        }
-        elseif (strlen($where) > 0) {
-            $this->db->where($where);
-        }
-
-        if (is_array($fields)) {
-            foreach ($fields as $field) {
-                $this->db->select($field);
-            }
-        }
-        elseif (strlen($fields) > 0) {
-            $this->db->select($fields);
-        }
-
-        $query = $this->db->get();
-
-        if ($this->return_type == 'array') {
-            $results = $query->result_array();
-        }
-        else {
-            $results = $query->result();
-        }
+        $results = $this->filter($where, $fields);
 
         if (count($results) == 1) {
             return $results[0];
@@ -175,7 +153,9 @@ class MY_Model extends CI_Model {
     /**
      * filter
      *
-     * Method to retrieve data from database
+     * Method to retrieve data from database.
+     * This method will always return an array of results,
+     * even if it's just one row.
      *
      * @param array $where      Can be an array or a string
      * @param array $fields     Can be an array or a string
@@ -269,14 +249,23 @@ class MY_Model extends CI_Model {
      * @access public
      * @return array
      */
-    public function paginate($offset, $quantity = 10, $where = '') {
+    public function paginate($offset, $rows = 10, $where = '', $fields = '') {
         if (is_array($where)) {
-            foreach ($where as $w){
-                $this->db->where($w);
+            foreach ($where as $f => $w){
+                $this->db->where($f, $w);
             }
         }
         elseif (strlen($where) > 0) {
             $this->db->where($where);
+        }
+
+        if (is_array($fields)) {
+            foreach ($fields as $field) {
+                $this->db->select($field);
+            }
+        }
+        elseif (strlen($fields) > 0) {
+            $this->db->select($fields);
         }
 
         $this->db->limit($quantity, $offset);
