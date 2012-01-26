@@ -57,6 +57,18 @@ class MY_Model extends CI_Model {
     protected $table;
 
     /**
+     * primary_key
+     *
+     * The primary key of the model's table.
+     *
+     * When extending this class you may want to change it to fit your tables' primary key field.
+     *
+     * @var string
+     * @access protected
+     */
+    protected $primary_key = 'id';
+
+    /**
      * return_type
      *
      * Which type of data methods should return.
@@ -70,15 +82,13 @@ class MY_Model extends CI_Model {
      * @var mixed
      * @access protected
      */
-    protected $return_type;
+    protected $return_type = 'array';
 
     /**
      * constructor method
      */
     public function  __construct() {
         parent::__construct();
-
-        $this->return_type = 'array';
     }
 
     /**
@@ -119,7 +129,7 @@ class MY_Model extends CI_Model {
      *
      * Method to save data to the database.
      *
-     * To update data you must have an 'id' element in the given array.
+     * To update data you must have an {$this->primary_key} element in the given array.
      *
      * This method returns the row id (inserted or updated)
      *
@@ -128,16 +138,16 @@ class MY_Model extends CI_Model {
      * @return mixed
      */
     public function save($data) {
-        if (isset($data['id']) AND $data['id'] != 0) {
-            $this->db->where('id', $data['id']);
+        if (isset($data[$this->primary_key]) AND $data[$this->primary_key] != 0) {
+            $this->db->where($this->primary_key, $data[$this->primary_key]);
             $this->db->update($this->table, $data);
         }
         else {
             $this->db->insert($this->table, $data);
-            $data['id'] = $this->db->insert_id();
+            $data[$this->primary_key] = $this->db->insert_id();
         }
 
-        return ($this->db->affected_rows() > 0) ? $data['id'] : FALSE;
+        return ($this->db->affected_rows() > 0) ? $data[$this->primary_key] : FALSE;
     }
 
     /**
@@ -199,7 +209,7 @@ class MY_Model extends CI_Model {
             return FALSE;
         }
         else {
-            $this->db->where('id', $id);
+            $this->db->where($this->primary_key, $id);
             $this->db->delete($this->table);
 
             return TRUE;
