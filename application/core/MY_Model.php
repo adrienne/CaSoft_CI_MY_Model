@@ -227,8 +227,8 @@ class MY_Model extends CI_Model {
      */
     public function count_results($where = '') {
         if (is_array($where)) {
-            foreach ($where as $w){
-                $this->db->where($w);
+            foreach ($where as $f => $w){
+                $this->db->where($f, $w);
             }
         }
         elseif (strlen($where) > 0) {
